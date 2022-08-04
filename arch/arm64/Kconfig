@@ -1600,3 +1600,7 @@ config HWCONF_MANAGER
 	help
          It provides all kinds of components configuration information and
          monitor values.
+
+if ARCH_QCOM
+source "techpack/Kconfig"
+endif
