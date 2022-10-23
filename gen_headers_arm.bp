@@ -957,6 +957,7 @@ gen_headers_out_arm = [
     "linux/netfilter/ipset/ip_set_list.h",
     "linux/drv8846.h",
     "linux/akm09970.h",
+    "linux/millet.h",
 
     // From arch/arm/include/uapi/**/*.h
 
