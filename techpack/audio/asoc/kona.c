@@ -97,6 +97,9 @@
   #if defined (CONFIG_TARGET_PRODUCT_ALIOTH)
     #define CS35L41_SPEAKER_NAME "cs35l41.1-0040"
     #define CS35L41_RECEIVER_NAME "cs35l41.1-0041"
+  #elif defined (CONFIG_TARGET_PRODUCT_PENROSE)
+    #define CS35L41_SPEAKER_NAME "cs35l41.2-0040"
+    #define CS35L41_RECEIVER_NAME "cs35l41.2-0041"
   #else
     #define CS35L41_SPEAKER_NAME "cs35l41.1-0040"
     #define CS35L41_RECEIVER_NAME "cs35l41.1-0042"
@@ -8247,6 +8250,7 @@ static struct snd_soc_card *populate_snd_card_dailinks(struct device *dev)
 				    get_hw_version_platform() == HARDWARE_PLATFORM_ENUMA ||
 				    get_hw_version_platform() == HARDWARE_PLATFORM_ELISH ||
 				    get_hw_version_platform() == HARDWARE_PLATFORM_PSYCHE ||
+				    get_hw_version_platform() == HARDWARE_PLATFORM_PENROSE ||
 					get_hw_version_platform() == HARDWARE_PLATFORM_CAS) {
 					memcpy(msm_kona_dai_links + total_links,
 						tert_mi2s_rx_cs35l41_dai_links,
