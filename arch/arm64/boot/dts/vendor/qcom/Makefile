@@ -68,6 +68,22 @@ dtbo-$(CONFIG_BOARD_UMI) += \
 umi-sm8250-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
 endif
 
+ifeq ($(CONFIG_BOARD_PENROSE),y)
+dtbo-$(CONFIG_BOARD_PENROSE) += \
+                penrose-sm8250-overlay.dtbo \
+                penrose-sm8250-overlay-v1.dtbo \
+                penrose-sm8250-overlay-v1.1.dtbo \
+                penrose-sm8250-overlay-v2.dtbo \
+                penrose-sm8250-overlay-v2.1.dtbo \
+                penrose-sm8250-overlay-v9.dtbo \
+penrose-sm8250-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v1.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v1.1.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v2.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v2.1.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v9.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+endif
+
 endif
 endif
 
