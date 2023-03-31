@@ -13,6 +13,12 @@ ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
                 apollo-sm8250-overlay.dtbo \
                 alioth-sm8250-overlay.dtbo \
                 thyme-sm8250-overlay.dtbo \
+                penrose-sm8250-overlay.dtbo \
+                penrose-sm8250-overlay-v1.dtbo \
+                penrose-sm8250-overlay-v1.1.dtbo \
+                penrose-sm8250-overlay-v2.dtbo \
+                penrose-sm8250-overlay-v2.1.dtbo \
+                penrose-sm8250-overlay-v9.dtbo \
                 kona-rumi-overlay.dtbo \
                 kona-qrd-overlay.dtbo \
 		kona-xrfusion-overlay.dtbo \
@@ -32,6 +38,12 @@ cas-sm8250-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
 apollo-sm8250-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
 alioth-sm8250-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
 thyme-sm8250-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v1.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v1.1.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v2.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v2.1.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
+penrose-sm8250-overlay-v9.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
 kona-xr-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
 kona-rumi-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
 kona-qrd-overlay.dtbo-base := kona.dtb kona-v2.dtb kona-v2.1.dtb
