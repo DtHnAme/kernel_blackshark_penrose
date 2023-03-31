@@ -824,7 +824,7 @@ int mhi_arch_link_resume(struct mhi_controller *mhi_cntrl)
 	if (!ret)
 		msm_pcie_l1ss_timeout_enable(pci_dev);
 
-#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME)
+#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME) || defined(CONFIG_MACH_XIAOMI_PENROSE)
 	mhi_cntrl->force_m3_done = true;
 #endif
 

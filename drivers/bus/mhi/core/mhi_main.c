@@ -1489,7 +1489,7 @@ int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
 	struct mhi_link_info link_info, *cur_info = &mhi_cntrl->mhi_link_info;
 	int result, ret = 0;
 
-#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME)
+#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME) || defined(CONFIG_MACH_XIAOMI_PENROSE)
 	if (mhi_cntrl->need_force_m3 && !mhi_cntrl->force_m3_done)
 		goto exit_bw_scale_process;
 #endif

@@ -1723,6 +1723,11 @@ config MACH_XIAOMI_PSYCHE
 	help
 		Support for Mi 12X
 
+config MACH_XIAOMI_PENROSE
+	bool "penrose board"
+	help
+		Support for BlackShark 4
+
 endmenu
 
 if ARCH_QCOM

@@ -677,7 +677,7 @@ static void mhi_pm_disable_transition(struct mhi_controller *mhi_cntrl,
 		sfr_info->buf_addr = NULL;
 	}
 
-#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME)
+#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME) || defined(CONFIG_MACH_XIAOMI_PENROSE)
 	mhi_cntrl->force_m3_done = false;
 #endif
 

@@ -702,7 +702,7 @@ static struct mhi_controller *mhi_register_controller(struct pci_dev *pci_dev)
 
 	mhi_cntrl->iova_start = memblock_start_of_DRAM();
 	mhi_cntrl->iova_stop = memblock_end_of_DRAM();
-#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME)
+#if defined(CONFIG_MACH_XIAOMI_ALIOTH) || defined(CONFIG_MACH_XIAOMI_THYME) || defined(CONFIG_MACH_XIAOMI_PENROSE)
 	mhi_cntrl->need_force_m3 = true;
 #endif
 
