@@ -1841,7 +1841,7 @@ static void bq25790_dump_irq(struct bq25790 *bq)
 	if (!bq->resume_completed)
 		return;
 
-	for (addr = 0x1b; addr <= 0x27; addr++) {
+	for (addr = 0x00; addr <= 0x27; addr++) {
 		bq25790_read_reg(bq, addr, &val);
 		bq_dbg(PR_OEM, "status 0x%.2x=0x%.2x\n", addr, val);
 	}
