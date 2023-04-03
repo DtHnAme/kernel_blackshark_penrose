@@ -4395,35 +4395,15 @@ int dsi_panel_set_disp_param(struct dsi_panel *panel, u32 param)
 		break;
 	case DISPPARAM_DC_ON:
 		pr_info("DC on\n");
-		if (mi_cfg->dc_type == 0) {
-			rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_DC_ON);
-			if (rc)
-				pr_err("[%s] failed to send DSI_CMD_SET_MI_DC_ON cmd, rc=%d\n",
-						panel->name, rc);
-			else
-				rc = dsi_panel_update_backlight(panel, mi_cfg->last_bl_level);
-		}
-		if (panel->mi_cfg.panel_id == 0x4C334100420200) {
-			mi_dsi_update_lhbm_cmd_b2reg(panel, true);
-			mi_dsi_update_nolp_b2reg(panel, true);
-		}
+		mi_cfg->dc_type = 0;
 		mi_cfg->dc_enable = true;
+		dsi_panel_update_backlight(panel, panel->bl_config.bl_level);
 		break;
 	case DISPPARAM_DC_OFF:
 		pr_info("DC off\n");
-		if (mi_cfg->dc_type == 0) {
-			rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_DC_OFF);
-			if (rc)
-				pr_err("[%s] failed to send DSI_CMD_SET_MI_DC_OFF cmd, rc=%d\n",
-						panel->name, rc);
-			else
-				rc = dsi_panel_update_backlight(panel, mi_cfg->last_bl_level);
-		}
-		if (panel->mi_cfg.panel_id == 0x4C334100420200) {
-			mi_dsi_update_lhbm_cmd_b2reg(panel, false);
-			mi_dsi_update_nolp_b2reg(panel, false);
-		}
+		mi_cfg->dc_type = 0;
 		mi_cfg->dc_enable = false;
+		dsi_panel_update_backlight(panel, panel->bl_config.bl_level);
 		break;
 	default:
 		break;
