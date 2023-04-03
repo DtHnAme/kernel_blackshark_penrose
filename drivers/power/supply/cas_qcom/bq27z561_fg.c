@@ -1557,7 +1557,7 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 		val->intval = bq->fast_mode;
 		break;
 	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
-		val->intval = bq->batt_fcc * 2000;
+		val->intval = bq->batt_rm * 2000;
 		break;
 	case POWER_SUPPLY_PROP_TERMINATION_CURRENT:
 		val->intval = bq->term_curr;
