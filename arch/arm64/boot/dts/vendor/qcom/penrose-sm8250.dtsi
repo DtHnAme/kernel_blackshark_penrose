@@ -62,6 +62,60 @@ And public attribution of xiaomi platforms(like penrose and so and)
                 };
         };
 
+		slide_keys {
+			key_slide_shark_up_default: key_slide_shark_up_default {
+				mux {
+					pins = "gpio121";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio121";
+					input-enable;
+					bias-disable;
+				};
+			};
+
+			key_slide_shark_down_default: key_slide_shark_down_default {
+				mux {
+					pins = "gpio100";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio100";
+					input-enable;
+					bias-disable;
+				};
+			};
+
+			key_click_up_default: key_click_up_default {
+				mux {
+					pins = "gpio22";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio22";
+					input-enable;
+					bias-pull-up;
+				};
+			};
+
+			key_click_down_default: key_click_down_default {
+				mux {
+					pins = "gpio99";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio99";
+					input-enable;
+					bias-pull-up;
+				};
+			};
+		};
+
 };
 
 &soc {
@@ -73,6 +127,65 @@ And public attribution of xiaomi platforms(like penrose and so and)
 		pinctrl-0 = <&test_mode_irq>;
 	};
 
+	slide_gpio_keys_shark_up {
+		compatible = "gpio-keys";
+		label = "slide-keys-shark_up";
+
+		slide_shark {
+			label = "slide_shark_up";
+			wakeup-source;
+			gpios = <&tlmm 0x79 0>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_FRONT_PROXIMITY>;
+			debounce-interval = <15>;
+		};
+	};
+
+	slide_gpio_keys_shark_down {
+		compatible = "gpio-keys";
+		label = "slide-keys-shark_down";
+
+		slide_shark {
+			label = "slide_shark_down";
+			wakeup-source;
+			gpios = <&tlmm 0x64 0>;
+			linux,input-type = <EV_SW>;
+			linux,code = <SW_ROTATE_LOCK>;
+			debounce-interval = <15>;
+		};
+	};
+
+	slide_gpio_keys_click_up {
+		compatible = "gpio-keys";
+		label = "slide-keys-click-up";
+		pinctrl-names = "default";
+		pinctrl-0 = <&key_click_up_default>;
+
+		slide_up {
+			label = "click_up";
+			gpios = <&tlmm 0x16 1>;
+			linux,input-type = <EV_KEY>;
+			linux,code = <KEY_F1>;
+			debounce-interval = <15>;
+			linux,can-disable;
+		};
+	};
+
+	slide_gpio_keys_click_down {
+		compatible = "gpio-keys";
+		label = "slide-keys-click-down";
+		pinctrl-names = "default";
+		pinctrl-0 = <&key_click_down_default>;
+
+		slide_up {
+			label = "click_down";
+			gpios = <&tlmm 0x63 1>;
+			linux,input-type = <EV_KEY>;
+			linux,code = <KEY_F2>;
+			debounce-interval = <15>;
+			linux,can-disable;
+		};
+	};
 };
 
 &ts_active {
