@@ -1,0 +1,21 @@
+#include "penrose-sm8250-camera-sensor-mtp.dtsi"
+
+&soc {
+	camera_wide_vana_ldo: gpio-regulator@0 {
+		compatible = "regulator-fixed";
+		reg = <0x00 0x00>;
+		regulator-name = "camera_wide_vana_ldo";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		regulator-enable-ramp-delay = <135>;
+		enable-active-high;
+		gpio = <&tlmm 38 0>;
+		vin-supply = <&pm8150a_bob>;
+	};
+};
+
+&cam_cci0 {
+	qcom,cam-sensor@0 {
+		cam_v_custom1-supply =<&camera_wide_vana_ldo>;
+	};
+};

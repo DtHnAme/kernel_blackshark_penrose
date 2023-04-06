@@ -26,18 +26,6 @@
 		switch-source = <&pm8150l_switch0>;
 		status = "ok";
 	};
-	
-	camera_wide_vana_ldo: gpio-regulator@0 {
-		compatible = "regulator-fixed";
-		reg = <0x00 0x00>;
-		regulator-name = "camera_wide_vana_ldo";
-		regulator-min-microvolt = <2900000>;
-		regulator-max-microvolt = <2900000>;
-		regulator-enable-ramp-delay = <135>;
-		enable-active-high;
-		gpio = <&tlmm 26 0>;
-		vin-supply = <&pm8150a_bob>;
-	};
 };
 
 &cam_cci0 {
@@ -56,7 +44,7 @@
 		cell-index = <0>;
 		compatible = "qcom,actuator";
 		cci-master = <0>;
-		cam_vaf-supply = <&pm8150a_l7>;
+		cam_vaf-supply = <&pm8150a_l9>;
 		regulator-names = "cam_vaf";
 		rgltr-cntrl-support;
 		rgltr-min-voltage = <2856000>;
@@ -68,7 +56,7 @@
 		cell-index = <3>;
 		compatible = "qcom,actuator";
 		cci-master = <1>;
-		cam_vaf-supply = <&pm8150a_l7>;
+		cam_vaf-supply = <&pm8150a_l9>;
 		regulator-names = "cam_vaf";
 		rgltr-cntrl-support;
 		rgltr-min-voltage = <2856000>;
@@ -114,7 +102,7 @@
 		led-flash-src = <&led_flash_wide>;
 		eeprom-src = <&eeprom_wide>;
 		cam_vio-supply = <&pm8150a_l5>;
-		cam_vana-supply = <&camera_wide_vana_ldo>;//AVDD2.9
+		cam_vana-supply = <&L7P>;//AVDD2.9
 		cam_v_custom1-supply =<&L6P>;//AVDD1.8
 		cam_vdig-supply = <&L2P>;
 		cam_clk-supply = <&titan_top_gdsc>;
