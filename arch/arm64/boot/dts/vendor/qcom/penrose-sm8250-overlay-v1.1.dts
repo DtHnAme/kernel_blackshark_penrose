@@ -7,7 +7,7 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 
 #include "penrose-sm8250.dtsi"
-#include "penrose-sm8250-camera-sensor-mtp.dtsi"
+#include "penrose-sm8250-camera-sensor-mtp-v1.dtsi"
 / {
 	model = "Qualcomm Technologies, Inc. xiaomi penrose v1.1";
 	compatible = "qcom,kona-mtp", "qcom,kona", "qcom,mtp";
