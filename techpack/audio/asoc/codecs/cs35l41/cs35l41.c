@@ -802,7 +802,7 @@ static irqreturn_t cs35l41_irq(int irq, void *data)
 	unsigned int status[4];
 	unsigned int masks[4];
 	unsigned int i;
-	dev_info(cs35l41->dev, "step into cs35l41 irq handler\n");
+	dev_dbg(cs35l41->dev, "step into cs35l41 irq handler\n");
 
 	for (i = 0; i < ARRAY_SIZE(status); i++) {
 		regmap_read(cs35l41->regmap,
