@@ -331,14 +331,13 @@ And public attribution of xiaomi platforms(like penrose and so and)
 };
 
 &sde_dp {
-	status = "disabled";
-	qcom,uart-en-gpio = <&tlmm 111 0>;
+	status = "ok";
+	qcom,uart-en-gpio = <&tlmm 159 0>;
 	qcom,aux-cc-gpio = <&tlmm 14 0>;
 };
 
 &mdss_mdp {
-	connectors = <&sde_wb &sde_dsi &sde_dsi1 &sde_rscc>;
-	//connectors = <&sde_dp &sde_dsi &sde_dsi1 &sde_rscc>;
+	connectors = <&sde_dp &sde_dsi &sde_dsi1 &sde_rscc>;
 };
 
 &pm8150a_l11 {

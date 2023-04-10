@@ -9,6 +9,7 @@
 
 #include "dp_aux.h"
 #include "dp_debug.h"
+#include "dp_switch.h"
 
 #define DP_AUX_ENUM_STR(x)		#x
 
@@ -770,12 +771,6 @@ static int dp_aux_configure_aux_switch(struct dp_aux *dp_aux,
 
 	aux = container_of(dp_aux, struct dp_aux_private, dp_aux);
 
-	if (!aux->aux_switch_node) {
-		DP_DEBUG("undefined fsa4480 handle\n");
-		rc = -EINVAL;
-		goto end;
-	}
-
 	if (enable) {
 		switch (orientation) {
 		case ORIENTATION_CC1:
@@ -793,10 +788,7 @@ static int dp_aux_configure_aux_switch(struct dp_aux *dp_aux,
 
 	DP_DEBUG("enable=%d, orientation=%d, event=%d\n",
 			enable, orientation, event);
-
-	rc = fsa4480_switch_event(aux->aux_switch_node, event);
-	if (rc)
-		DP_ERR("failed to configure fsa4480 i2c device (%d)\n", rc);
+	dp_usb_switch_event(event);
 end:
 	return rc;
 }
