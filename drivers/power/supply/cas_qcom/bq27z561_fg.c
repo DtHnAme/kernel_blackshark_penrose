@@ -2113,7 +2113,7 @@ static int fg_check_full_status(struct bq_fg_chip *bq)
 			term_curr, full_volt, bq->usb_present, bq->batt_sw_fc);
 
 	if (bq->usb_present && bq->raw_soc == BQ_RAW_SOC_FULL && bq->batt_volt > full_volt &&
-			bq->batt_curr < 0 && (bq->batt_curr > term_curr * (-1)) &&
+			bq->batt_curr < 0 && (bq->batt_curr <= term_curr * (-1)) &&
 			!bq->batt_sw_fc) {
 		full_check++;
 		bq_dbg(PR_OEM, "full_check:%d\n", full_check);
