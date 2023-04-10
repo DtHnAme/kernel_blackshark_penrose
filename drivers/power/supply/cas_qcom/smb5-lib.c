@@ -7951,9 +7951,9 @@ static void smblib_cc_un_compliant_charge_work(struct work_struct *work)
 	if (usb_present && chg->typec_mode == POWER_SUPPLY_TYPEC_SINK_AUDIO_ADAPTER) {
 		chg->real_charger_type = POWER_SUPPLY_TYPE_USB_FLOAT;
 		chg->usb_psy_desc.type = POWER_SUPPLY_TYPE_USB_FLOAT;
-		if ((strcmp(get_effective_client(chg->usb_icl_votable), "OTG_VOTER") == 0) &&
-					(get_effective_result(chg->usb_icl_votable) == 0))
-			vote(chg->usb_icl_votable, OTG_VOTER, false, 0);
+		if ((strcmp(get_effective_client(chg->otg_en_votable), "OTG_VOTER") == 0) &&
+					(get_effective_result(chg->otg_en_votable) == 0))
+			vote(chg->otg_en_votable, OTG_VOTER, false, 0);
 
 		if (get_client_vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER) != 500000)
 			vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER, true, 500000);
@@ -8784,7 +8784,7 @@ static void typec_sink_insertion(struct smb_charger *chg)
 	}
 	/* do not vote while wireless attached to allow charging via usb */
 	if ((chg->batt_2s_chg || chg->wireless_bq) && !chg->power_good_en)
-		vote(chg->usb_icl_votable, OTG_VOTER, true, 0);
+		vote(chg->otg_en_votable, OTG_VOTER, true, 0);
 
 	typec_src_fault_condition_cfg(chg, true);
 	rc = smblib_set_charge_param(chg, &chg->param.freq_switcher,
@@ -8877,7 +8877,7 @@ static void typec_sink_removal(struct smb_charger *chg)
 	if (chg->wireless_bq)
 		smblib_set_wireless_otg_state(chg, false);
 
-	vote(chg->usb_icl_votable, OTG_VOTER, false, 0);
+	vote(chg->otg_en_votable, OTG_VOTER, false, 0);
 	typec_src_fault_condition_cfg(chg, false);
 	rc = smblib_set_charge_param(chg, &chg->param.freq_switcher,
 					chg->chg_freq.freq_removal);
@@ -8946,7 +8946,7 @@ static void typec_src_removal(struct smb_charger *chg)
 	vote(chg->usb_icl_votable, HVDCP2_ICL_VOTER, false, 0);
 	vote(chg->usb_icl_votable, CHG_TERMINATION_VOTER, false, 0);
 	vote(chg->usb_icl_votable, THERMAL_THROTTLE_VOTER, false, 0);
-	vote(chg->usb_icl_votable, OTG_VOTER, false, 0);
+	vote(chg->otg_en_votable, OTG_VOTER, false, 0);
 	vote(chg->usb_icl_votable, LPD_VOTER, false, 0);
 	vote(chg->usb_icl_votable, QC2_UNSUPPORTED_VOTER, false, 0);
 	vote(chg->usb_icl_votable, WIRELESS_ICL_VOTER, false, 0);
@@ -9441,7 +9441,7 @@ int smblib_set_wirless_power_good_enable(struct smb_charger *chg,
 		smblib_wireless_ovp_enable(chg, true);
 		cancel_delayed_work(&chg->dc_plug_out_delay_work);
 		chg->real_charger_type = POWER_SUPPLY_TYPE_WIRELESS;
-		vote(chg->usb_icl_votable, OTG_VOTER, false, 0);
+		vote(chg->otg_en_votable, OTG_VOTER, false, 0);
 		vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER, false, 0);
 		vote(chg->usb_icl_votable, USB_PSY_VOTER, false, 0);
 		vote(chg->dc_icl_votable, WIRELESS_ENABLE_VOTER, true, MAX_DC_CURRENT_UA);
@@ -9482,7 +9482,7 @@ int smblib_set_wirless_power_good_enable(struct smb_charger *chg,
 			schedule_delayed_work(&chg->wired_ovp_delay_enable_work,
 			msecs_to_jiffies(WIRED_OVP_CLOSE_DELAY_MS));
 		else
-			vote(chg->usb_icl_votable, OTG_VOTER, true, 0);
+			vote(chg->otg_en_votable, OTG_VOTER, true, 0);
 		vote(chg->usbin_suspend_votable, WIRELESS_ENABLE_VOTER, false, 0);
 		vote(chg->awake_votable, DC_PLUGOUT_WIRELESS_VOTER, true, 0);
 
@@ -11196,6 +11196,11 @@ static int smblib_create_votables(struct smb_charger *chg)
 	}
 
 	vote(chg->pl_disable_votable, PL_DELAY_VOTER, true, 0);
+
+	chg->otg_en_votable = find_votable(OTG_VOTER);
+	if (chg->otg_en_votable == NULL) {
+		smblib_err(chg, "Couldn't find votable OTG_VOTER\n");
+	}
 
 	chg->smb_override_votable = create_votable("SMB_EN_OVERRIDE",
 				VOTE_SET_ANY,

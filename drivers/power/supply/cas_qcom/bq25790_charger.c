@@ -95,6 +95,7 @@ struct bq25790 {
 	int hvdcp_class;
 	int arti_vbus_gpio;
 	bool arti_vbus_enable;
+	bool otg_enable;
 	int reverse_gpio;
 	bool hiz_mode;
 	bool enable_term;
@@ -141,6 +142,7 @@ struct bq25790 {
 	struct votable	*chg_dis_votable;
 	struct votable	*arti_vbus_dis_votable;
 	struct votable	*ffc_mode_disable;
+	struct votable	*otg_en_votable;
 };
 
 enum {
@@ -327,6 +329,28 @@ static int bq25790_set_arti_vbus_disable(struct bq25790 *bq, bool disable)
 
 	bq_dbg(PR_OEM, "set arti vbus disable to:%d   bq->arti_vbus_enable:%d\n", disable,  bq->arti_vbus_enable);
 	return ret;
+}
+
+static int bq25790_set_otg_enable(struct bq25790 *bq, bool enable)
+{
+	int ret; 
+	u8 reg_val;
+
+	if (enable) {
+		reg_val = BQ25790_OTG_ENABLE;
+	} else {
+		reg_val = BQ25790_OTG_DISABLE;
+	}
+
+	reg_val <<= BQ25790_OTG_EN_SHIFT;
+
+	ret = bq25790_update_byte_bits(bq, BQ25790_REG_CHG_CTRL3,
+				BQ25790_OTG_EN_MASK, reg_val);
+
+	bq->otg_enable = enable;
+
+	bq_dbg(PR_OEM, "set otg enable to:%d bq->otg_enable:%d\n", enable,  bq->otg_enable);
+	return 0;
 }
 
 static int bq25790_set_charge_voltage(struct bq25790 *bq, int volt)
@@ -2102,6 +2126,17 @@ static int bq25790_arti_vbus_dis_vote_callback(struct votable *votable, void *da
 	return 0;
 }
 
+static int bq25790_otg_en_vote_callback(struct votable *votable, void *data,
+			int enable, const char *client)
+
+{
+	struct bq25790 *bq = (struct bq25790 *)data;
+
+	bq25790_set_otg_enable(bq, enable);
+
+	return 0;
+}
+
 static int bq25790_create_votable(struct bq25790 *bq)
 {
 	int rc;
@@ -2147,6 +2182,11 @@ static int bq25790_create_votable(struct bq25790 *bq)
 	}
 
 	vote(bq->arti_vbus_dis_votable, BQ25790_PROP_VOTER, true, 0);
+
+	bq->otg_en_votable = create_votable("OTG_VOTER", 
+			VOTE_SET_ANY, 
+			bq25790_otg_en_vote_callback, 
+			bq);
 
 	bq->awake_votable = create_votable("BBC_AWAKE",
 			VOTE_SET_ANY, bq25790_awake_vote_cb, bq);

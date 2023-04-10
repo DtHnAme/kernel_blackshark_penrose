@@ -636,6 +636,7 @@ struct smb_charger {
 	struct votable		*ffc_mode_dis_votable;
 	struct votable		*input_suspend_votable;
 	struct votable		*passthrough_disable_votable;
+	struct votable		*otg_en_votable;
 
 	/* work */
 	struct work_struct      bbc_update_work;
