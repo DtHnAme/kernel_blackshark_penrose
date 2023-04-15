@@ -961,9 +961,6 @@ static int fg_read_system_soc(struct bq_fg_chip *bq)
 {
 	int batt_soc = 0, curr = 0, temp = 0, raw_soc = 0, soc = 0;
 	static ktime_t last_change_time = -1;
-	int unit_time = 0, delta_time = 0;
-	int change_delta = 0;
-	int soc_changed = 0;
 	int ret = 0;
 
 	if (bq->fake_soc != -EINVAL)
@@ -983,46 +980,6 @@ static int fg_read_system_soc(struct bq_fg_chip *bq)
 	temp = bq->batt_temp;
 
 	soc = bq_battery_soc_smooth_tracking(bq, raw_soc, batt_soc, temp, curr);
-
-	if (raw_soc > 9600) {
-		if (raw_soc == 10000 && bq->last_soc < 99) {
-			unit_time = 40000;
-			calc_delta_time(last_change_time, &change_delta);
-			if (delta_time < 0) {
-				last_change_time = ktime_get();
-				delta_time = 0;
-			}
-			delta_time = change_delta / unit_time;
-			soc_changed = min(1, delta_time);
-			if (soc_changed) {
-				soc = bq->last_soc + soc_changed;
-				bq_dbg(PR_OEM, "soc increase changed = %d\n", soc_changed);
-			} else
-				soc = bq->last_soc;
-		} else
-			soc = 100;
-	} else {
-		if (raw_soc == 0 && bq->last_soc > 1) {
-			bq->ffc_smooth = false;
-			unit_time = 10000;
-			calc_delta_time(last_change_time, &change_delta);
-			delta_time = change_delta / unit_time;
-			if (delta_time < 0) {
-				last_change_time = ktime_get();
-				delta_time = 0;
-			}
-			soc_changed = min(1, delta_time);
-			if (soc_changed) {
-				bq_dbg(PR_OEM, "soc reduce changed = %d\n", soc_changed);
-				soc = bq->last_soc - soc_changed;
-			} else
-				soc = bq->last_soc;
-		} else {
-			soc = (raw_soc + 95) / 96;
-			if (soc <= 102 && soc > 99)
-				soc = 99;
-		}
-	}
 
 	if (soc > 100)
 		soc = 100;
