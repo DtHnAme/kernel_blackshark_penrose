@@ -1244,9 +1244,15 @@ static int fts_parse_dt(struct device *dev, struct fts_ts_platform_data *pdata)
 
 	FTS_FUNC_ENTER();
 
+#ifndef CONFIG_BOARD_PENROSE
 	ret = fts_get_dt_coords(dev, "focaltech,display-coords", pdata);
 	if (ret < 0)
 		FTS_ERROR("Unable to get display-coords");
+#else
+	ret = fts_get_dt_coords(dev, "focaltech,touch-display-coords", pdata);
+	if (ret < 0)
+		FTS_ERROR("Unable to get display-coords");
+#endif
 
 	/* key */
 	pdata->have_key = of_property_read_bool(np, "focaltech,have-key");
