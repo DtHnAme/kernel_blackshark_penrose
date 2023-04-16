@@ -691,12 +691,21 @@ static int fts_read_parse_touchdata(struct fts_ts_data *data)
 		}
 
 		data->touch_point++;
+#ifdef CONFIG_BOARD_PENROSE
+		events[i].x = ((buf[FTS_TOUCH_X_H_POS + base] & 0x0F) << 12) +
+					  ((buf[FTS_TOUCH_X_L_POS + base] & 0xFF) << 4) +
+					  ((buf[FTS_TOUCH_PRE_POS + base] >> 4));
+		events[i].y = ((buf[FTS_TOUCH_Y_H_POS + base] & 0x0F) << 12) +
+					  ((buf[FTS_TOUCH_Y_L_POS + base] & 0xFF) << 4) +
+					  ((buf[FTS_TOUCH_PRE_POS + base] & 0xF));
+#else
 		events[i].x = ((buf[FTS_TOUCH_X_H_POS + base] & 0x0F) << 11) +
 					  ((buf[FTS_TOUCH_X_L_POS + base] & 0xFF) << 3) +
 					  ((buf[FTS_TOUCH_PRE_POS + base] & 0xE0) >> 5);
 		events[i].y = ((buf[FTS_TOUCH_Y_H_POS + base] & 0x0F) << 11) +
 					  ((buf[FTS_TOUCH_Y_L_POS + base] & 0xFF) << 3) +
 					  ((buf[FTS_TOUCH_PRE_POS + base] & 0x1C) >> 2);
+#endif
 		events[i].flag = buf[FTS_TOUCH_EVENT_POS + base] >> 6;
 		events[i].id = buf[FTS_TOUCH_ID_POS + base] >> 4;
 		events[i].area = buf[FTS_TOUCH_AREA_POS + base] >> 4;

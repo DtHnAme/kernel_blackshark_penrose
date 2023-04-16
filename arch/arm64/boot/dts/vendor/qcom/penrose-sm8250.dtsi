@@ -289,7 +289,7 @@ And public attribution of xiaomi platforms(like penrose and so and)
 		focaltech,reset-gpio = <&tlmm 33 0x00>;
 		focaltech,irq-gpio = <&tlmm 39 0x2008>;
 		focaltech,max-touch-number = <10>;
-		focaltech,display-coords = <0 0 8640 19200>;
+		focaltech,display-coords = <0 0 17280 38400>;
 	};
 };
 
