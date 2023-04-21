@@ -30,8 +30,6 @@
 #include "dp_debug.h"
 #include "sde_dbg.h"
 
-#include "dp_switch.h"
-
 #define DP_MST_DEBUG(fmt, ...) DP_DEBUG(fmt, ##__VA_ARGS__)
 
 #define dp_display_state_show(x) { \
@@ -2633,10 +2631,17 @@ static int dp_display_create_workqueue(struct dp_display_private *dp)
 	return 0;
 }
 
+static int dp_display_fsa4480_callback(struct notifier_block *self,
+		unsigned long event, void *data)
+{
+	return 0;
+}
+
 static int dp_display_init_aux_switch(struct dp_display_private *dp)
 {
 	int rc = 0;
 	const char *phandle = "qcom,dp-aux-switch";
+	struct notifier_block nb;
 
 	if (!dp->pdev->dev.of_node) {
 		DP_ERR("cannot find dev.of_node\n");
@@ -2652,6 +2657,16 @@ static int dp_display_init_aux_switch(struct dp_display_private *dp)
 		goto end;
 	}
 
+	nb.notifier_call = dp_display_fsa4480_callback;
+	nb.priority = 0;
+
+	rc = fsa4480_reg_notifier(&nb, dp->aux_switch_node);
+	if (rc) {
+		DP_ERR("failed to register notifier (%d)\n", rc);
+		goto end;
+	}
+
+	fsa4480_unreg_notifier(&nb, dp->aux_switch_node);
 end:
 	return rc;
 }
@@ -3076,12 +3091,6 @@ static int dp_display_probe(struct platform_device *pdev)
 	dp->name = "drm_dp";
 
 	memset(&dp->mst, 0, sizeof(dp->mst));
-
-	rc = dp_usb_switch_init_gpio(&dp->pdev->dev);
-	if (rc) {
-		rc = -EPROBE_DEFER;
-		goto error;
-	}
 
 	rc = dp_display_init_aux_switch(dp);
 	if (rc) {
