@@ -278,7 +278,7 @@ static int dp_parser_gpio(struct dp_parser *parser)
 			/* In case any gpio was not specified, we think gpio
 			 * aux switch also was not specified.
 			 */
-			parser->gpio_aux_switch = false;
+			//parser->gpio_aux_switch = false;
 			continue;
 		}
 
