@@ -2099,8 +2099,10 @@ static int fg_check_full_status(struct bq_fg_chip *bq)
 	}
 
 	if (bq->fast_mode) {
-		if (bq->batt_temp > BQ28Z610_FFC_TERM_WAM_TEMP) {
+		if ((bq->batt_temp - 350) > 130) {
 			bq->ffc_term_curr = bq->ffc_warm_term;
+		} else if ((bq->batt_temp - 150) > 200) {
+			bq->ffc_term_curr = bq->cold_term;
 		} else {
 			bq->ffc_term_curr = bq->ffc_normal_term;
 		}
@@ -2108,7 +2110,7 @@ static int fg_check_full_status(struct bq_fg_chip *bq)
 		term_curr = bq->ffc_term_curr;
 		interval = MONITOR_WORK_1S;
 	} else {
-		if (bq->batt_temp < BQ28Z610_COLD_TEMP_TERM) {
+		if ((bq->batt_temp - 150) >= 330) {
 			bq->term_curr = bq->cold_term;
 			delta = 40;
 		} else {
