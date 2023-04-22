@@ -566,7 +566,7 @@ And public attribution of xiaomi platforms(like penrose and so and)
 		bq,ffc-warm-term = <894>;
 		bq,ffc-normal-term = <654>;
 		bq,ffc-other-term = <109>;
-		bq,other-term = <109>;
+		bq,cold-term = <109>;
 		bq,normal-term = <200>;
 		bq,charge-full-design = <2250000>;
 		bq,recharge-voltage   = <8800>;
