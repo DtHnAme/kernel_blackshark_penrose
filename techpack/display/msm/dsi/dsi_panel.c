@@ -870,8 +870,13 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 				DSI_INFO("fod_hbm_enabled(%d),hbm_enabled(%d),"
 					"skip set backlight %d\n", mi_cfg->fod_hbm_enabled,
 					mi_cfg->hbm_enabled, bl_lvl);
-			} else if (mi_cfg->hbm_enabled && !mi_cfg->thermal_hbm_disabled && bl_lvl != 0 && mi_cfg->last_bl_level == 0) {
-				rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_HBM_ON);
+			} else if (mi_cfg->hbm_enabled && !mi_cfg->thermal_hbm_disabled) {
+				if (bl_lvl == bl->bl_max_level) {
+					rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_HBM_ON);
+				} else {
+					rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_HBM_OFF);
+					rc = dsi_panel_update_backlight(panel, bl_lvl);
+				}
 			} else if (mi_cfg->thermal_hbm_disabled && bl_lvl > 2047 && mi_cfg->last_bl_level == 0) {
 				bl_lvl = 2047;
 				rc = dsi_panel_update_backlight(panel, bl_lvl);
