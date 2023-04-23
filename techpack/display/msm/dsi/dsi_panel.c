@@ -870,6 +870,8 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 				DSI_INFO("fod_hbm_enabled(%d),hbm_enabled(%d),"
 					"skip set backlight %d\n", mi_cfg->fod_hbm_enabled,
 					mi_cfg->hbm_enabled, bl_lvl);
+			} else if (mi_cfg->hbm_enabled && !mi_cfg->thermal_hbm_disabled && bl_lvl != 0 && mi_cfg->last_bl_level == 0) {
+				rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_HBM_ON);
 			} else if (mi_cfg->thermal_hbm_disabled && bl_lvl > 2047 && mi_cfg->last_bl_level == 0) {
 				bl_lvl = 2047;
 				rc = dsi_panel_update_backlight(panel, bl_lvl);
@@ -4455,7 +4457,6 @@ int dsi_panel_set_lp1(struct dsi_panel *panel)
 	struct dsi_panel_mi_cfg *mi_cfg;
 
 	mi_cfg = &panel->mi_cfg;
-	mi_cfg->hbm_enabled = false;
 
 	if (!panel) {
 		DSI_ERR("invalid params\n");
@@ -4494,7 +4495,6 @@ int dsi_panel_set_lp2(struct dsi_panel *panel)
 	struct dsi_panel_mi_cfg *mi_cfg;
 
 	mi_cfg = &panel->mi_cfg;
-	mi_cfg->hbm_enabled = false;
 	if (!panel) {
 		DSI_ERR("invalid params\n");
 		return -EINVAL;
@@ -4992,7 +4992,6 @@ int dsi_panel_enable(struct dsi_panel *panel)
 		sde_crtc_fod_ui_ready(display, 1, 0);
 	}
 
-	mi_cfg->hbm_enabled = false;
 	mi_cfg->fod_hbm_enabled = false;
 	mi_cfg->fod_hbm_layer_enabled = false;
 	mi_cfg->fod_backlight_flag = false;
@@ -5208,7 +5207,6 @@ int dsi_panel_disable(struct dsi_panel *panel)
 		sde_crtc_fod_ui_ready(display, 1, 0);
 	}
 
-	mi_cfg->hbm_enabled = false;
 	mi_cfg->fod_hbm_enabled = false;
 	mi_cfg->fod_hbm_layer_enabled = false;
 	mi_cfg->fod_backlight_flag = false;
