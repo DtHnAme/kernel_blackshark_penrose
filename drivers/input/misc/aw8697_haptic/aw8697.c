@@ -457,6 +457,62 @@ static char aw8697_rtp_thirteen_name[][AW8697_RTP_NAME_MAX] = {
     {"192_hapticsVideo_P_RTP.bin"},
 };
 #endif
+#ifdef SUPPORT_BLACKSHARK_RTP
+static char aw8697_rtp_blackshark_name[][AW8697_RTP_NAME_MAX] = {
+	{"1004_EnterSharkspace_P_RTP.bin"},
+	{"1020_fallSoundBulletLoaded_P_RTP.bin"}, // 1
+	{"1021_riseSoundBulletLoaded_P_RTP.bin"},
+	{"1022_fallSoundClassic_P_RTP.bin"},
+	{"1023_riseSoundClassic_P_RTP.bin"},
+	{"1024_fallSoundElectric_P_RTP.bin"},
+	{"1025_riseSoundElectric_P_RTP.bin"},
+	{"1026_fallSoundEnergyCannon_P_RTP.bin"},
+	{"1027_riseSoundEnergyCannon_P_RTP.bin"},
+	{"1028_fallSoundMechaTransformation_P_RTP.bin"},
+	{"1029_riseSoundMechaTransformation_P_RTP.bin"},
+	{"1030_AlternateActionDown_P_RTP.bin"},
+	{"1031_AlternateActionUp_P_RTP.bin"},
+	{"1032_LinearActionDown_P_RTP.bin"},
+	{"1033_LinearActionUp_P_RTP.bin"},
+	{"1034_RedSwitchDown_P_RTP.bin"},
+	{"1035_RedSwitchUp_P_RTP.bin"},
+	{"1036_BlueSwitchDown_P_RTP.bin"},
+	{"1037_BlueSwitchUp_P_RTP.bin"},
+	{"1050_SwitchPressLight_P_RTP.bin"}, // 18
+	{"1051_SwitchUpHeavy_P_RTP.bin"},
+	{"1052_JoystickDownBuffer_P_RTP.bin"},
+	{"1053_JoystickDownBottom_P_RTP.bin"},
+	{"1054_JoystickUpHeavy_P_RTP.bin"},
+	{"1055_JoystickAmp10_P_RTP.bin"},
+	{"1056_JoystickAmp12_P_RTP.bin"},
+	{"1057_JoystickAmp14_P_RTP.bin"},
+	{"1058_JoystickAmp16_P_RTP.bin"},
+	{"1059_JoystickAmp18_P_RTP.bin"},
+	{"1060_JoystickAmp20_P_RTP.bin"},
+	{"1061_JoystickAmp22_P_RTP.bin"},
+	{"1062_JoystickAmp24_P_RTP.bin"},
+	{"1063_JoystickAmp26_P_RTP.bin"},
+	{"1064_JoystickAmp28_P_RTP.bin"},
+	{"1065_JoystickAmp30_P_RTP.bin"},
+	{"1066_JoystickAmp32_P_RTP.bin"},
+	{"1067_JoystickAmp34_P_RTP.bin"},
+	{"1068_JoystickAmp36_P_RTP.bin"},
+	{"1069_JoystickAmp38_P_RTP.bin"},
+	{"1070_JoystickRebound_P_RTP.bin"},
+	{"1080_HeartbeatSingle_P_RTP.bin"}, // 39
+	{"1081_Heartbeat400ms_P_RTP.bin"},
+	{"1082_Heartbeat600ms_P_RTP.bin"},
+	{"1083_Heartbeat1200ms_P_RTP.bin"},
+	{"1090_fallSoundMew_P_RTP.bin"}, // 44
+	{"1091_riseSoundMew_P_RTP.bin"},
+	{"1092_fallSoundRifleGunfire_P_RTP.bin"},
+	{"1093_riseSoundRifleGunfire_P_RTP.bin"},
+	{"1094_fallSoundSwordUnsheathed_P_RTP.bin"},
+	{"1095_riseSoundSwordUnsheathed_P_RTP.bin"},
+	{"1096_fallSoundWindEcho_P_RTP.bin"},
+	{"1097_riseSoundWindEcho_P_RTP.bin"},
+};
+#endif
 static int CUSTOME_WAVE_ID;
 struct aw8697_container *aw8697_rtp;
 struct aw8697 *g_aw8697;
@@ -2665,6 +2721,9 @@ static void aw8697_rtp_work_routine(struct work_struct *work)
 	unsigned int cnt = 200;
 	unsigned char reg_val = 0;
 	bool rtp_work_flag = false;
+#ifdef SUPPORT_BLACKSHARK_RTP
+	unsigned int rtp_file_num = 0;
+#endif
 
 	if ((aw8697->effect_id < aw8697->info.effect_id_boundary) &&
 	    (aw8697->effect_id > aw8697->info.effect_max))
@@ -2737,6 +2796,47 @@ static void aw8697_rtp_work_routine(struct work_struct *work)
 			if (aw8697->rtp_file_num > ((sizeof(aw8697_rtp_name) / AW8697_RTP_NAME_MAX) - 1))
 				aw8697->rtp_file_num = (sizeof(aw8697_rtp_name) / AW8697_RTP_NAME_MAX) - 1;
 
+#ifdef SUPPORT_BLACKSHARK_RTP
+	switch(aw8697->effect_id) {
+		case 521:
+			// Possibly is placeholder
+			aw8697->rtp_file_num = aw8697->effect_id - 500 - aw8697->info.effect_id_boundary;
+			goto RTP_REQUEST_NORMAL;
+		case 1004:
+			break;
+		case 1020 ... 1037: // ShoulerKey Vib
+			rtp_file_num = aw8697->effect_id - 1020 + 1;
+			break;
+		case 1050 ... 1070: // JoyStick Vib
+			rtp_file_num = aw8697->effect_id - 1050 + 18;
+			break;
+		case 1080 ... 1083: // Unknown
+			rtp_file_num = aw8697->effect_id - 1080 + 39;
+			break;
+		case 1090 ... 1097: // ShoulerKey Vib p2
+			rtp_file_num = aw8697->effect_id - 1090 + 44;
+			break;
+		case 2000 ... 3000: // Special support for Tencent games
+			// Only on cn version so drop it
+			aw8697->rtp_file_num = 0;
+			goto RTP_REQUEST_NORMAL;
+		default:
+			goto RTP_REQUEST_NORMAL;
+	}
+
+	ret = request_firmware(&rtp_file, aw8697_rtp_blackshark_name[rtp_file_num], aw8697->dev);
+	if (ret < 0) {
+		pr_err("%s: failed to read %s\n", __func__, aw8697_rtp_blackshark_name[rtp_file_num]);
+		pm_relax(aw8697->dev);
+		mutex_unlock(&aw8697->lock);
+		return;
+	} else {
+		goto RTP_REQUEST_DONE;
+	}
+
+RTP_REQUEST_NORMAL:
+#endif
+
 #ifdef SUPPORT_RELOAD_FW
 			if (aw8697->vov == 1) {
 				/* fw loaded */
@@ -2771,7 +2871,7 @@ static void aw8697_rtp_work_routine(struct work_struct *work)
 				mutex_unlock(&aw8697->lock);
 				return;
 			}
-#ifdef SUPPORT_RELOAD_FW
+#if defined(SUPPORT_RELOAD_FW) || defined(SUPPORT_BLACKSHARK_RTP)
 RTP_REQUEST_DONE:
 #endif
 			vfree(aw8697_rtp);
@@ -5692,16 +5792,20 @@ static ssize_t aw8697_rtp_store(struct device *dev,
 	aw8697_haptic_stop(aw8697);
 	aw8697_haptic_set_rtp_aei(aw8697, false);
 	aw8697_interrupt_clear(aw8697);
+#ifndef SUPPORT_BLACKSHARK_RTP
 	if (val < (sizeof(aw8697_rtp_name) / AW8697_RTP_NAME_MAX)) {
+#endif
 		aw8697->rtp_file_num = val;
 		if (val) {
 			//schedule_work(&aw8697->rtp_work);
 			queue_work(aw8697->work_queue, &aw8697->rtp_work);
 		}
+#ifndef SUPPORT_BLACKSHARK_RTP
 	} else {
 		pr_err("%s: rtp_file_num 0x%02x over max value \n", __func__,
 		       aw8697->rtp_file_num);
 	}
+#endif
 
 	return count;
 }
