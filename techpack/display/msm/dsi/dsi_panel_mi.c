@@ -40,10 +40,6 @@ static struct proc_dir_entry *mipi_proc_entry = NULL;
 #define MIPI_PROC_NAME "mipi_reg"
 #endif
 
-#ifdef CONFIG_EXPOSURE_ADJUSTMENT
-#include "exposure_adjustment.h"
-#endif
-
 #define to_dsi_display(x) container_of(x, struct dsi_display, host)
 
 extern ssize_t mipi_dsi_dcs_write(struct mipi_dsi_device *dsi, u8 cmd, const void *data, size_t len);
@@ -4414,9 +4410,6 @@ int dsi_panel_set_disp_param(struct dsi_panel *panel, u32 param)
 			mi_dsi_update_nolp_b2reg(panel, true);
 		}
 		mi_cfg->dc_enable = true;
-		if (mi_cfg->dc_type == 1) {
-			ea_panel_mode_ctrl(panel, mi_cfg->dc_enable);
-		}
 		break;
 	case DISPPARAM_DC_OFF:
 		pr_info("DC off\n");
@@ -4433,9 +4426,6 @@ int dsi_panel_set_disp_param(struct dsi_panel *panel, u32 param)
 			mi_dsi_update_nolp_b2reg(panel, false);
 		}
 		mi_cfg->dc_enable = false;
-		if (mi_cfg->dc_type == 1) {
-			ea_panel_mode_ctrl(panel, mi_cfg->dc_enable);
-		}
 		break;
 	default:
 		break;
