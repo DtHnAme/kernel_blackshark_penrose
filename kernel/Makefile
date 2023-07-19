@@ -150,6 +150,8 @@ else ifeq ($(CONFIG_BOARD_THYME),y)
 $(obj)/config_data.gz: arch/arm64/configs/thyme_stock-defconfig FORCE
 else ifeq ($(CONFIG_BOARD_UMI),y)
 $(obj)/config_data.gz: arch/arm64/configs/umi_stock-defconfig FORCE
+else ifeq ($(CONFIG_BOARD_PENROSE),y)
+$(obj)/config_data.gz: arch/arm64/configs/penrose_stock-defconfig FORCE
 else
 $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
 endif

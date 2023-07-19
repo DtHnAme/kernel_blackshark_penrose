@@ -68,7 +68,11 @@ enum {
 	HW_PLATFORM_K11A = 44,
 	HW_PLATFORM_J2S = 45,
 	HW_PLATFORM_K81 = 46,
+#ifdef CONFIG_BOARD_PENROSE
+	HW_PLATFORM_K30A = 47,
+#else
 	HW_PLATFORM_K81A = 47,
+#endif
 	HW_PLATFORM_L3A = 48,
 	HW_PLATFORM_L11R = 50,
 	HW_PLATFORM_HDK = 31,
@@ -101,7 +105,11 @@ const char *hw_platform[] = {
 	[HW_PLATFORM_K11A] = "ALIOTH",
 	[HW_PLATFORM_J2S] = "THYME",
 	[HW_PLATFORM_K81] = "ENUMA",
+#ifdef CONFIG_BOARD_PENROSE
+	[HW_PLATFORM_K30A] = "PENROSE",
+#else
 	[HW_PLATFORM_K81A] = "ELISH",
+#endif
 	[HW_PLATFORM_L3A] = "PSYCHE",
 	[HW_PLATFORM_L11R] = "MUNCH",
 #ifdef CONFIG_BOARD_XIAOMI_SM7250
@@ -1790,8 +1798,13 @@ uint32_t get_hw_version_platform(void)
                 return HARDWARE_PLATFORM_THYME;
 	else if (hw_type == HW_PLATFORM_K81)
 		return HARDWARE_PLATFORM_ENUMA;
+#ifdef CONFIG_BOARD_PENROSE
+	else if (hw_type == HW_PLATFORM_K30A)
+		return HARDWARE_PLATFORM_PENROSE;
+#else
 	else if (hw_type == HW_PLATFORM_K81A)
 		return HARDWARE_PLATFORM_ELISH;
+#endif
         else if (hw_type == HW_PLATFORM_L3A)
                 return HARDWARE_PLATFORM_PSYCHE;
 	else if (hw_type == HW_PLATFORM_L11R)

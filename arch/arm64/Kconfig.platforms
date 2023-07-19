@@ -506,6 +506,12 @@ config BOARD_UMI
 	help
 	  This enables support for Xiaomi MI 10.
 
+config BOARD_PENROSE
+	bool "Penrose platform"
+	select BOARD_XIAOMI_SM8250
+	help
+	  This enables support for Blackshark 4.
+
 config BOARD_XIAOMI_SM7250
 	bool "Xiaomi SM7250 Board"
 	select ARCH_QCOM
