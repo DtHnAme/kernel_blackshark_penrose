@@ -4060,9 +4060,7 @@ int dsi_panel_set_disp_param(struct dsi_panel *panel, u32 param)
 	case DISPPARAM_HBM_ON:
 		pr_info("hbm on, thermal_hbm_disabled = %d\n", mi_cfg->thermal_hbm_disabled);
 		if (!mi_cfg->fod_hbm_enabled && !mi_cfg->thermal_hbm_disabled) {
-			if (mi_cfg->last_bl_level == panel->bl_config.bl_max_level) {
-				rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_HBM_ON);
-			}
+			rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_HBM_ON);
 			if (is_thermal_call) {
 				pr_info("thermal clear hbm limit, restore previous hbm on\n");
 			} else {
