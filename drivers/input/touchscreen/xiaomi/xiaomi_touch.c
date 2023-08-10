@@ -58,19 +58,19 @@ static long xiaomi_touch_dev_ioctl(struct file *file, unsigned int cmd,
 	mutex_lock(&dev->mutex);
 	ret = copy_from_user(&buf, (int __user *)argp, sizeof(buf));
 
-	MI_TOUCH_LOGI(1, "%s %s: cmd:%d, mode:%d, value:%d\n",
-		MI_TAG, __func__, user_cmd, buf[0], buf[1]);
+	MI_TOUCH_LOGI(1, "%s %s: cmd:%d, touchId:%d, mode:%d, value:%d\n",
+		MI_TAG, __func__, user_cmd, buf[0], buf[1], buf[2]);
 
 	switch (user_cmd) {
 	case SET_CUR_VALUE:
 		if (touch_data->setModeValue) {
-			if (buf[0] == Touch_Debug_Level && !pdata->debug_log) {
-				if (buf[1] == 1)
+			if (buf[1] == Touch_Debug_Level && !pdata->debug_log) {
+				if (buf[2] == 1)
 					mi_log_level = TOUCH_NOTICE;
 				else
 					mi_log_level = TOUCH_INFO;
 			} else {
-				buf[0] = touch_data->setModeValue(buf[0], buf[1]);
+				buf[0] = touch_data->setModeValue(buf[1], buf[2]);
 			}
 		}
 		break;
@@ -79,19 +79,19 @@ static long xiaomi_touch_dev_ioctl(struct file *file, unsigned int cmd,
 	case GET_MIN_VALUE:
 	case GET_MAX_VALUE:
 		if (touch_data->getModeValue)
-			buf[0] = touch_data->getModeValue(buf[0], user_cmd);
+			buf[0] = touch_data->getModeValue(buf[1], user_cmd);
 		break;
 	case RESET_MODE:
 		if (touch_data->resetMode)
-			buf[0] = touch_data->resetMode(buf[0]);
+			buf[0] = touch_data->resetMode(buf[1]);
 		break;
 	case GET_MODE_VALUE:
 		if (touch_data->getModeValue)
-			ret = touch_data->getModeAll(buf[0], buf);
+			ret = touch_data->getModeAll(buf[1], buf);
 		break;
 	case SET_LONG_VALUE:
-		if (touch_data->setModeLongValue && buf[1] <= MAX_BUF_SIZE)
-			ret = touch_data->setModeLongValue(buf[0], buf[1], &buf[2]);
+		if (touch_data->setModeLongValue && buf[2] <= MAX_BUF_SIZE)
+			ret = touch_data->setModeLongValue(buf[1], buf[2], &buf[3]);
 		break;
 	default:
 		MI_TOUCH_LOGE(1, "%s %s: don't support mode\n", MI_TAG, __func__);
