@@ -37,6 +37,9 @@
 #define ELF_BDF_FILE_NAME_K11A_GLOBAL	 "bd_k11agl.elf"
 #define ELF_BDF_FILE_NAME_K11A_INDIA	 "bd_k11ain.elf"
 
+#define ELF_BDF_FILE_NAME_K30A            "bd_k30a.elf"
+#define ELF_BDF_FILE_NAME_K30A_GLOBAL     "bd_k30agl.elf"
+
 #define ELF_BDF_FILE_NAME_PREFIX	"bdwlan.e"
 #define BIN_BDF_FILE_NAME		"bdwlan.bin"
 #define BIN_BDF_FILE_NAME_PREFIX	"bdwlan.b"
@@ -538,6 +541,11 @@ static int cnss_get_bdf_file_name(struct cnss_plat_data *plat_priv,
 				    snprintf(filename_tmp, filename_len, ELF_BDF_FILE_NAME_K11A_INDIA);
 				else
 				    snprintf(filename_tmp, filename_len, ELF_BDF_FILE_NAME_K11A);
+			} else if (hw_platform_ver == HARDWARE_PLATFORM_PENROSE) {
+				if (get_hw_country_version() == (uint32_t)CountryGlobal)
+				    snprintf(filename_tmp, filename_len, ELF_BDF_FILE_NAME_K30A_GLOBAL);
+				else
+				    snprintf(filename_tmp, filename_len, ELF_BDF_FILE_NAME_K30A);
 			} else {
 				if (hw_country_ver == (uint32_t)CountryGlobal)
 					snprintf(filename_tmp, filename_len, ELF_BDF_FILE_NAME_GLOBAL);
