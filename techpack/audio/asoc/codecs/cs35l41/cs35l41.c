@@ -226,6 +226,7 @@ static int cs35l41_fast_switch_en_get(struct snd_kcontrol *kcontrol,
 	return 0;
 }
 
+#ifndef CONFIG_TARGET_PRODUCT_PENROSE
 static int cs35l41_do_fast_switch(struct cs35l41_private *cs35l41)
 {
 	char			val_str[CS35L41_BUFSIZE];
@@ -358,6 +359,7 @@ exit:
 	release_firmware(fw);
 	return ret;
 }
+#endif
 
 static int cs35l41_fast_switch_en_put(struct snd_kcontrol *kcontrol,
 				      struct snd_ctl_elem_value *ucontrol)
@@ -379,7 +381,9 @@ static int cs35l41_fast_switch_file_put(struct snd_kcontrol *kcontrol,
 	struct cs35l41_private *cs35l41 = snd_soc_component_get_drvdata(component);
 	struct soc_enum		*soc_enum;
 	unsigned int		i = ucontrol->value.enumerated.item[0];
+#ifndef CONFIG_TARGET_PRODUCT_PENROSE
 	int			ret = 0;
+#endif
 
 	soc_enum = (struct soc_enum *)kcontrol->private_value;
 
@@ -387,6 +391,7 @@ static int cs35l41_fast_switch_file_put(struct snd_kcontrol *kcontrol,
 		dev_err(cs35l41->dev, "Invalid mixer input (%u)\n", i);
 		return -EINVAL;
 	}
+#ifndef CONFIG_TARGET_PRODUCT_PENROSE
 	if ((i != cs35l41->fast_switch_file_idx) && cs35l41->fast_switch_en) {
 		cs35l41->fast_switch_file_idx = i;
 		ret = cs35l41_do_fast_switch(cs35l41);
@@ -394,6 +399,7 @@ static int cs35l41_fast_switch_file_put(struct snd_kcontrol *kcontrol,
 		dev_info(cs35l41->dev, "do not need switch to delta (%u),origin delta %d, fast_switch_en %d\n",
 			i, cs35l41->fast_switch_file_idx, cs35l41->fast_switch_en);
 	}
+#endif
 
 	cs35l41->fast_switch_file_idx = i;
 
@@ -1313,6 +1319,7 @@ static const struct cs35l41_global_fs_config cs35l41_fs_rates[] = {
 
 #define HANDSET_TUNING "rcv_voice_delta.txt"
 
+#ifndef CONFIG_TARGET_PRODUCT_PENROSE
 static int cs35l41_is_speaker_in_handset(struct snd_pcm_substream *substream,
 		struct snd_soc_dai *dai)
 {
@@ -1344,6 +1351,7 @@ static int cs35l41_is_speaker_in_handset(struct snd_pcm_substream *substream,
 
 	return 0;
 }
+#endif
 static int cs35l41_pcm_hw_params(struct snd_pcm_substream *substream,
 				 struct snd_pcm_hw_params *params,
 				 struct snd_soc_dai *dai)
@@ -1355,11 +1363,13 @@ static int cs35l41_pcm_hw_params(struct snd_pcm_substream *substream,
 	u8 asp_width, asp_wl;
 	int val = 0;
 
+#ifndef CONFIG_TARGET_PRODUCT_PENROSE
 	if(cs35l41_is_speaker_in_handset(substream, dai)) {
 		dev_info(cs35l41->dev, "%s: speaker amp"
 				" hw_parmas in handset mode\n", __func__);
 		return 0;
 	}
+#endif
 
 	regmap_read(cs35l41->regmap, CS35L41_PLL_CLK_CTRL, &val);
 	dev_info(cs35l41->dev, "%s: Before 0x2c04 <= 0x%x\n",
