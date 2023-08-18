@@ -1303,6 +1303,9 @@ static const struct cs35l41_global_fs_config cs35l41_fs_rates[] = {
 #if defined (CONFIG_TARGET_PRODUCT_ALIOTH)
 #define SPK_DAI_NAME "cs35l41.1-0040"
 #define RCV_DAI_NAME "cs35l41.1-0041"
+#elif defined (CONFIG_TARGET_PRODUCT_PENROSE)
+#define SPK_DAI_NAME "cs35l41.2-0040"
+#define RCV_DAI_NAME "cs35l41.2-0041"
 #else
 #define SPK_DAI_NAME "cs35l41.1-0040"
 #define RCV_DAI_NAME "cs35l41.1-0042"
