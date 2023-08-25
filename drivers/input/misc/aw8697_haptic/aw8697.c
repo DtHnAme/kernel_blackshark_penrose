@@ -233,6 +233,37 @@ static char aw8697_rtp_name[][AW8697_RTP_NAME_MAX] = {
 	{"FOD_Motion_Ripple_RTP.bin"},
 	{"FOD_Motion_Spiral_RTP.bin"},
 	{"gamebox_launch_rtp.bin"}, // 161
+	{"Gesture_Back_Pull_RTP.bin"},// 162
+	{"Gesture_Back_Release_RTP.bin"},// 163
+	{"alert_rtp.bin"},// 164
+	{"feedback_negative_light_rtp.bin"},// 165
+	{"feedback_neutral_rtp.bin"},// 166
+	{"feedback_positive_rtp.bin"},// 167
+	{"fingerprint_record_rtp.bin"},// 168
+	{"lockdown_rtp.bin"},// 169
+	{"sliding_damping_rtp.bin"},// 170
+	{"todo_alldone_rtp.bin"},// 171
+	{"uninstall_animation_icon_rtp.bin"},// 172
+	{"signal_button_highlight_rtp.bin"},//173
+	{"signal_button_negative_rtp.bin"},
+	{"signal_button_rtp.bin"},
+	{"signal_clock_high_rtp.bin"},//176
+	{"signal_clock_rtp.bin"},
+	{"signal_clock_unit_rtp.bin"},
+	{"signal_inputbox_rtp.bin"},
+	{"signal_key_high_rtp.bin"},
+	{"signal_key_unit_rtp.bin"},//181
+	{"signal_list_highlight_rtp.bin"},
+	{"signal_list_rtp.bin"},
+	{"signal_picker_rtp.bin"},
+	{"signal_popup_rtp.bin"},
+	{"signal_seekbar_rtp.bin"},//186
+	{"signal_switch_rtp.bin"},
+	{"signal_tab_rtp.bin"},
+	{"signal_text_rtp.bin"},
+	{"signal_transition_light_rtp.bin"},
+	{"signal_transition_rtp.bin"},//191
+	{"haptics_video_rtp.bin"},//192
 };
 
 static char aw8697_rtp_thirteen_name[][AW8697_RTP_NAME_MAX] = {
