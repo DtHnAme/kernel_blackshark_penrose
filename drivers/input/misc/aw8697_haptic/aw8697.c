@@ -2323,8 +2323,8 @@ static int16_t aw8697_haptic_effect_strength(struct aw8697 *aw8697)
 static int aw8697_haptic_play_effect_seq(struct aw8697 *aw8697,
 					 unsigned char flag)
 {
-	if (aw8697->effect_id > aw8697->info.effect_id_boundary)
-		return 0;
+	//if (aw8697->effect_id > aw8697->info.effect_id_boundary)
+	//	return 0;
 	//printk("%s:aw8697->effect_id =%d\n", __func__, aw8697->effect_id);
 	//printk("%s:aw8697->activate_mode =%d\n", __func__, aw8697->activate_mode);
 
@@ -2344,7 +2344,11 @@ static int aw8697_haptic_play_effect_seq(struct aw8697 *aw8697,
 			aw8697_haptic_start(aw8697);
 		}
 		if (aw8697->activate_mode == AW8697_HAPTIC_ACTIVATE_RAM_LOOP_MODE) {
-			aw8697_haptic_set_repeat_wav_seq(aw8697, (aw8697->info.effect_id_boundary + 1));
+			if (aw8697->effect_id == aw8697->info.effect_id_boundary) {
+				aw8697_haptic_set_repeat_wav_seq(aw8697, (aw8697->info.effect_id_boundary + 1));
+			} else {
+				aw8697_haptic_set_repeat_wav_seq(aw8697, AW8697_REG_MAIN_LOOP);
+			}
 			aw8697_haptic_play_repeat_seq(aw8697, true);
 		}
 	}
@@ -4070,6 +4074,11 @@ static void aw8697_vibrator_work_routine(struct work_struct *work)
 						1000000), HRTIMER_MODE_REL);
 		} else {
 			/*other mode */
+			aw8697_haptic_set_bst_vol(aw8697, aw8697->info.bst_vol_ram);
+			aw8697_haptic_play_mode(aw8697, AW8697_HAPTIC_RAM_MODE);
+			aw8697_haptic_effect_strength(aw8697);
+			aw8697_haptic_set_gain(aw8697, aw8697->level);
+			aw8697_haptic_start(aw8697);
 		}
 	} else {
 		if (aw8697->wk_lock_flag == 1) {
